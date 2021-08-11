@@ -6,3 +6,4 @@ root.withdraw()
 
 file_path = filedialog.askopenfilename()
 print(file_path)
+print("test")
