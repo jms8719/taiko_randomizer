@@ -3,6 +3,7 @@ from tkinter import filedialog
 import sys
 import ctypes
 import os
+import random
 
 # file selection
 root = tk.Tk()
@@ -48,15 +49,25 @@ if not hasMode:
     file.close()
     sys.exit(0)
 
+# reopen
 file.close()
 file = open(file_path, "r", encoding = 'utf-8')
 
+# name the new file
 for num in range(1,1000):
-    if not os.path.isfile(file_path + "_random_" + str(num)):
-        new_file_path = file_path + "_random_" + str(num)
+    if not os.path.isfile(file_path[:-5] + "_random_" + str(num) + "].osu"):
+        new_file_path = file_path[:-5] + "_random_" + str(num) + "].osu"
+        ver = num
         break
 
 new_file = open(new_file_path, "a", encoding = 'utf-8')
+
+for line in file:
+    if "Version:" in line.strip():
+        new_file.write(line.strip() + "_random_" + str(ver) + "\n")
+        break
+    else:
+        new_file.write(line)
 
 for line in file:
     new_file.write(line)
@@ -64,4 +75,22 @@ for line in file:
         break
 
 for line in file:
-    
+    splited = line.split(",")
+    if splited[3] == "5" or splited[3] == "1":
+        if splited[4] == "0" or splited[4] == "8":
+            if random.randint(0,1) == 0:
+                new_file.write(splited[0] + "," + splited[1] + "," + splited[2] + "," + splited[3] + ",0," + splited[5] + "\n")
+            else:
+                new_file.write(splited[0] + "," + splited[1] + "," + splited[2] + "," + splited[3] + ",8," + splited[5] + "\n")
+        elif splited[4] == "4" or splited[4] == "12":
+            if random.randint(0,1) == 0:
+                new_file.write(splited[0] + "," + splited[1] + "," + splited[2] + "," + splited[3] + ",4," + splited[5] + "\n")
+            else:
+                new_file.write(splited[0] + "," + splited[1] + "," + splited[2] + "," + splited[3] + ",12," + splited[5] + "\n")
+        else:
+            new_file.write(line)
+    else:
+        new_file.write(line)
+
+file.close()
+new_file.close()
